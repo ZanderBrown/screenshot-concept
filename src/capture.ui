@@ -44,7 +44,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="pixel_size">48</property>
-                    <property name="icon_name">video-display</property>
+                    <property name="icon_name">video-display-symbolic</property>
                     <property name="icon_size">6</property>
                   </object>
                   <packing>
@@ -91,7 +91,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="pixel_size">48</property>
-                    <property name="icon_name">widget-gtk-window</property>
+                    <property name="icon_name">window-maximize-symbolic</property>
                     <property name="icon_size">6</property>
                   </object>
                   <packing>
@@ -138,7 +138,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="pixel_size">48</property>
-                    <property name="icon_name">input-tablet</property>
+                    <property name="icon_name">input-tablet-symbolic</property>
                     <property name="icon_size">6</property>
                   </object>
                   <packing>
