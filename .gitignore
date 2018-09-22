@@ -1,2 +1,4 @@
 *.ui~
 _build/
+# gnome-builder stuff, probably a bug does not clean them
+tags.*

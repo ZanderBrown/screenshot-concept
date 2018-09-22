@@ -23,6 +23,33 @@ from .gi_composites import GtkTemplate
 class KasbahWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'KasbahWindow'
 
+    capture_stack = GtkTemplate.Child()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.init_template()
+
+        capture = CaptureBox()
+        save = SaveBox()
+
+        self.capture_stack.add_named(capture, "capture")
+        self.capture_stack.add_named(save, "save")
+        self.show_all()
+
+
+@GtkTemplate(ui='/org/gnome/Kasbah/capture.ui')
+class CaptureBox(Gtk.Box):
+    __gtype_name__ = 'CaptureBox'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.init_template()
+
+
+@GtkTemplate(ui='/org/gnome/Kasbah/save.ui')
+class SaveBox(Gtk.Box):
+    __gtype_name__ = 'SaveBox'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
