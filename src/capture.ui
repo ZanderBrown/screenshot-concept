@@ -43,12 +43,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="border_width">0</property>
                 <property name="draw_indicator">False</property>
                 <property name="group">selection</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">12</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
@@ -98,6 +100,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">12</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
@@ -147,6 +150,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">12</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
