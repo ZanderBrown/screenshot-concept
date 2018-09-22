@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="kasbah">
+	<schema id="org.gnome.Kasbah" path="/org/gnome/Kasbah/">
+	</schema>
+</schemalist>

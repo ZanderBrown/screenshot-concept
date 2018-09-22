@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=kasbah
+Exec=kasbah
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

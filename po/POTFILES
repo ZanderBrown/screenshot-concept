@@ -1,0 +1,7 @@
+data/org.gnome.Kasbah.desktop.in
+data/org.gnome.Kasbah.appdata.xml.in
+data/org.gnome.Kasbah.gschema.xml
+src/window.ui
+src/main.py
+src/window.py
+
