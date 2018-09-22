@@ -41,6 +41,18 @@ class KasbahWindow(Gtk.ApplicationWindow):
 class CaptureBox(Gtk.Box):
     __gtype_name__ = 'CaptureBox'
 
+
+    # The 3 radio buttons
+    screen = GtkTemplate.Child()
+    window = GtkTemplate.Child()
+    selection = GtkTemplate.Child()
+
+    # The usefull switches from the widget
+    # We will need to map actions to them later
+    pointer = GtkTemplate.Child()
+    shadow = GtkTemplate.Child()
+    delay = GtkTemplate.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
