@@ -5,4 +5,7 @@
     <file>capture.ui</file>
     <file>save.ui</file>
   </gresource>
+  <gresource prefix="/org/gnome/Kasbah/gtk">
+    <file>menus.ui</file>
+  </gresource>
 </gresources>

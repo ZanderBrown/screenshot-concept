@@ -29,6 +29,9 @@ if appstream_util.found()
   )
 endif
 
+install_data('org.gnome.Kasbah.svg',
+             install_dir: join_paths([get_option('datadir'),'icons/hicolor/scalable/apps']))
+
 install_data('org.gnome.Kasbah.gschema.xml',
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
