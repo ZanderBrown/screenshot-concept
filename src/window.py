@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Gio, GObject
+from gi.repository import Gtk, Gio, GObject, GLib
 from .gi_composites import GtkTemplate
 
+from pathlib import Path
 
 @GtkTemplate(ui='/org/gnome/Kasbah/window.ui')
 class KasbahWindow(Gtk.ApplicationWindow):
@@ -35,6 +36,10 @@ class KasbahWindow(Gtk.ApplicationWindow):
 
         action = Gio.SimpleAction.new("about", None)
         action.connect("activate", self.on_about)
+        self.add_action(action)
+
+        action = Gio.SimpleAction.new("screenshot", None)
+        action.connect("activate", capture.screenshot)
         self.add_action(action)
 
         self.capture_stack.add_named(capture, "capture")
@@ -105,7 +110,6 @@ class CaptureBox(Gtk.Box):
     @mode.setter
     def mode(self, value):
         self._mode = value
-        print(value)
         if value == 'Selection':
             if not self._toggle_flag:
                 self.selection.props.active = True
@@ -151,6 +155,40 @@ class CaptureBox(Gtk.Box):
             current = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
             current.show()
             row.set_header(current)
+
+    def watch(self, pid, status):
+        win = self.get_toplevel()
+        win.show()
+        # TODO: Save dialog
+
+    def screenshot(self, act, p):
+        win = self.get_toplevel()
+        parts = [GLib.get_user_cache_dir(), 'kasbah.png']
+        filename = GLib.build_filenamev(parts)
+        args = []
+        if Path('/.flatpak-info').exits():
+            prog = GLib.find_program_in_path('flatpak-spawn')
+            args.extend([prog, '--host', 'gnome-screenshot'])
+        else:
+            prog = GLib.find_program_in_path('gnome-screenshot')
+            args.extend([prog])
+        args.extend(['-f', filename])
+        print('Launching ' + ' '.join(args))
+        try:
+            win.hide()
+            flags = GLib.SpawnFlags.DO_NOT_REAP_CHILD
+            (pid, sin, sout, serr) = GLib.spawn_async(args, flags=flags)
+            GLib.child_watch_add(GLib.PRIORITY_DEFAULT_IDLE, pid, self.watch)
+        except:
+            win.show()
+            title = 'Screenshot failed'
+            secondary = 'Failed to launch gnome-screenshot'
+            Gtk.MessageDialog(transient_for=win,
+                              modal=True,
+                              message_type=Gtk.MessageType.ERROR,
+                              buttons=Gtk.ButtonsType.CLOSE,
+                              text=title,
+                              secondary_text=secondary).show()
 
 
 @GtkTemplate(ui='/org/gnome/Kasbah/save.ui')
