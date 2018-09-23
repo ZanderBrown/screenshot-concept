@@ -90,6 +90,24 @@ class CaptureBox(Gtk.Box):
 
         self.listbox.set_header_func(self.update_header)
 
+    @GtkTemplate.Callback
+    def on_screen(self, btn):
+        self.pointer.props.sensitive = True
+        self.shadow.props.sensitive = False
+        self.delay.props.sensitive = True
+
+    @GtkTemplate.Callback
+    def on_window(self, btn):
+        self.pointer.props.sensitive = True
+        self.shadow.props.sensitive = True
+        self.delay.props.sensitive = True
+
+    @GtkTemplate.Callback
+    def on_selection(self, btn):
+        self.pointer.props.sensitive = False
+        self.shadow.props.sensitive = False
+        self.delay.props.sensitive = False
+
     def update_header(self, row, before):
         if not before:
             row.set_header(None)
