@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GObject
 from .gi_composites import GtkTemplate
 
 
@@ -68,7 +68,8 @@ class KasbahWindow(Gtk.ApplicationWindow):
 @GtkTemplate(ui='/org/gnome/Kasbah/capture.ui')
 class CaptureBox(Gtk.Box):
     __gtype_name__ = 'CaptureBox'
-
+    _mode = 'Window'
+    _toggle_flag = False
 
     # The 3 radio buttons
     screen = GtkTemplate.Child()
@@ -96,26 +97,52 @@ class CaptureBox(Gtk.Box):
         settings.bind('include-pointer', self.pointer, 'active', flags)
         settings.bind('window-shadow', self.shadow, 'active', flags)
         settings.bind('delay', self.delay, 'value', flags)
+        settings.bind('mode', self, 'mode', flags)
 
         self.listbox.set_header_func(self.update_header)
 
-    @GtkTemplate.Callback
-    def on_screen(self, btn):
-        self.pointerrow.props.sensitive = True
-        self.shadowrow.props.sensitive = False
-        self.delayrow.props.sensitive = True
+    @GObject.Property(type=str, nick='Screenshot mode')
+    def mode(self):
+        return self._mode
+
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
+        print(value)
+        if value == 'Selection':
+            if not self._toggle_flag:
+                self.selection.props.active = True
+            self.pointerrow.props.sensitive = False
+            self.shadowrow.props.sensitive = False
+            self.delayrow.props.sensitive = False
+        elif value == 'Screen':
+            if not self._toggle_flag:
+                self.screen.props.active = True
+            self.pointerrow.props.sensitive = True
+            self.shadowrow.props.sensitive = False
+            self.delayrow.props.sensitive = True
+        else:
+            if not self._toggle_flag:
+                self.window.props.active = True
+            self.pointerrow.props.sensitive = True
+            self.shadowrow.props.sensitive = True
+            self.delayrow.props.sensitive = True
+        self._toggle_flag = False
 
     @GtkTemplate.Callback
-    def on_window(self, btn):
-        self.pointerrow.props.sensitive = True
-        self.shadowrow.props.sensitive = True
-        self.delayrow.props.sensitive = True
+    def on_screen(self, btn=None):
+        self._toggle_flag = True
+        self.props.mode = 'Screen'
 
     @GtkTemplate.Callback
-    def on_selection(self, btn):
-        self.pointerrow.props.sensitive = False
-        self.shadowrow.props.sensitive = False
-        self.delayrow.props.sensitive = False
+    def on_window(self, btn=None):
+        self._toggle_flag = True
+        self.props.mode = 'Window'
+
+    @GtkTemplate.Callback
+    def on_selection(self, btn=None):
+        self._toggle_flag = True
+        self.props.mode = 'Selection'
 
     def update_header(self, row, before):
         if not before:
