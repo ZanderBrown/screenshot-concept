@@ -159,7 +159,17 @@ class CaptureBox(Gtk.Box):
     def watch(self, pid, status):
         win = self.get_toplevel()
         win.show()
-        # TODO: Save dialog
+        if status is not 0:
+            title = 'Screenshot failed'
+            secondary = 'gnome-screenshot returned a non-zero status'
+            dlg = Gtk.MessageDialog(transient_for=win,
+                                    modal=True,
+                                    message_type=Gtk.MessageType.ERROR,
+                                    buttons=Gtk.ButtonsType.CLOSE,
+                                    text=title,
+                                    secondary_text=secondary)
+            dlg.connect('response', lambda d, r: d.destroy())
+            dlg.show()
 
     def screenshot(self, act, p):
         win = self.get_toplevel()
@@ -171,7 +181,18 @@ class CaptureBox(Gtk.Box):
             args.extend([prog, '--host', 'gnome-screenshot'])
         else:
             prog = GLib.find_program_in_path('gnome-screenshot')
-            args.extend([prog])
+            args.append(prog)
+        if self.mode == 'Window':
+            args.append('-w')
+            if self.shadow.props.active:
+                args.extend(['-e', 'shadow'])
+        elif self.mode == 'Selection':
+            args.append('-a')
+        if not self.mode == 'Selection':
+            if self.pointer.props.active:
+                args.append('-p')
+            if self.delay.props.value > 0:
+                args.extend(['-d', str(int(self.delay.props.value))])
         args.extend(['-f', filename])
         print('Launching ' + ' '.join(args))
         try:
@@ -183,12 +204,14 @@ class CaptureBox(Gtk.Box):
             win.show()
             title = 'Screenshot failed'
             secondary = 'Failed to launch gnome-screenshot'
-            Gtk.MessageDialog(transient_for=win,
-                              modal=True,
-                              message_type=Gtk.MessageType.ERROR,
-                              buttons=Gtk.ButtonsType.CLOSE,
-                              text=title,
-                              secondary_text=secondary).show()
+            dlg = Gtk.MessageDialog(transient_for=win,
+                                    modal=True,
+                                    message_type=Gtk.MessageType.ERROR,
+                                    buttons=Gtk.ButtonsType.CLOSE,
+                                    text=title,
+                                    secondary_text=secondary)
+            dlg.connect('response', lambda d, r: d.destroy())
+            dlg.show()
 
 
 @GtkTemplate(ui='/org/gnome/Kasbah/save.ui')
