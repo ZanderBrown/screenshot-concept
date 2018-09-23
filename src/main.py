@@ -39,4 +39,5 @@ class Application(Gtk.Application):
 
 def main(version):
     app = Application()
+    Gtk.Window.set_default_icon_name('org.gnome.Kasbah')
     return app.run(sys.argv)

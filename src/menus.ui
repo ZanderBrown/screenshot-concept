@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<interface domain="gnome-kasbah">
+  <menu id="win-menu">
+    <section id="app">
+      <item>
+        <attribute name="label" translatable="yes">_Help</attribute>
+        <attribute name="action">win.help</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
