@@ -81,9 +81,25 @@ class CaptureBox(Gtk.Box):
     shadow = GtkTemplate.Child()
     delay = GtkTemplate.Child()
 
+    # Options list
+    listbox = GtkTemplate.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
+
+        self.listbox.set_header_func(self.update_header)
+
+    def update_header(self, row, before):
+        if not before:
+            row.set_header(None)
+            return
+
+        current = row.get_header()
+        if not current:
+            current = Gtk.Separator.new(Gtk.Orientation.HORIZONTAL)
+            current.show()
+            row.set_header(current)
 
 
 @GtkTemplate(ui='/org/gnome/Kasbah/save.ui')
