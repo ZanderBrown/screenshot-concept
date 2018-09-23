@@ -83,6 +83,9 @@ class CaptureBox(Gtk.Box):
 
     # Options list
     listbox = GtkTemplate.Child()
+    pointerrow = GtkTemplate.Child()
+    shadowrow = GtkTemplate.Child()
+    delayrow = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -98,21 +101,21 @@ class CaptureBox(Gtk.Box):
 
     @GtkTemplate.Callback
     def on_screen(self, btn):
-        self.pointer.props.sensitive = True
-        self.shadow.props.sensitive = False
-        self.delay.props.sensitive = True
+        self.pointerrow.props.sensitive = True
+        self.shadowrow.props.sensitive = False
+        self.delayrow.props.sensitive = True
 
     @GtkTemplate.Callback
     def on_window(self, btn):
-        self.pointer.props.sensitive = True
-        self.shadow.props.sensitive = True
-        self.delay.props.sensitive = True
+        self.pointerrow.props.sensitive = True
+        self.shadowrow.props.sensitive = True
+        self.delayrow.props.sensitive = True
 
     @GtkTemplate.Callback
     def on_selection(self, btn):
-        self.pointer.props.sensitive = False
-        self.shadow.props.sensitive = False
-        self.delay.props.sensitive = False
+        self.pointerrow.props.sensitive = False
+        self.shadowrow.props.sensitive = False
+        self.delayrow.props.sensitive = False
 
     def update_header(self, row, before):
         if not before:
