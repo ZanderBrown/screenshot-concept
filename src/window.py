@@ -23,58 +23,11 @@ from pathlib import Path
 @GtkTemplate(ui='/org/gnome/Kasbah/window.ui')
 class KasbahWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'KasbahWindow'
-
-    capture_stack = GtkTemplate.Child()
-    menu = GtkTemplate.Child()
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.init_template()
-
-        capture = CaptureBox()
-        save = SaveBox()
-
-        action = Gio.SimpleAction.new("about", None)
-        action.connect("activate", self.on_about)
-        self.add_action(action)
-
-        action = Gio.SimpleAction.new("screenshot", None)
-        action.connect("activate", capture.screenshot)
-        self.add_action(action)
-
-        self.capture_stack.add_named(capture, "capture")
-        self.capture_stack.add_named(save, "save")
-
-        self.menu.props.menu_model = self.props.application. \
-            get_menu_by_id('win-menu')
-        self.show_all()
-
-    def on_about(self, act, p):
-        artists = ['Tobias Bernard']
-        authors = ['Jordan Petridis', 'Zander Brown']
-        # TODO: Translatable
-        comments = 'Save images of your screen or individual windows'
-        website = 'https://gitlab.gnome.org/alatiera/Kasbah'
-        about_dialog = Gtk.AboutDialog(transient_for=self,
-                                       modal=True,
-                                       artists=artists,
-                                       authors=authors,
-                                       comments=comments,
-                                       copyright='© 2018 Jordan Petridis',
-                                       license_type=Gtk.License.AGPL_3_0,
-                                       logo_icon_name='org.gnome.Kasbah',
-                                       program_name='Kasbah',
-                                       version='0.0.1',
-                                       website=website,
-                                       website_label='Repository')
-        about_dialog.present()
-
-
-@GtkTemplate(ui='/org/gnome/Kasbah/capture.ui')
-class CaptureBox(Gtk.Box):
-    __gtype_name__ = 'CaptureBox'
     _mode = 'Window'
     _toggle_flag = False
+
+    # Hamburger menu
+    menu = GtkTemplate.Child()
 
     # The 3 radio buttons
     screen = GtkTemplate.Child()
@@ -94,12 +47,23 @@ class CaptureBox(Gtk.Box):
         super().__init__(**kwargs)
         self.init_template()
 
+        action = Gio.SimpleAction.new("about", None)
+        action.connect("activate", self.on_about)
+        self.add_action(action)
+
+        action = Gio.SimpleAction.new("screenshot", None)
+        action.connect("activate", self.on_screenshot)
+        self.add_action(action)
+
         settings = Gio.Settings.new('org.gnome.Kasbah')
         flags = Gio.SettingsBindFlags.DEFAULT
         settings.bind('include-pointer', self.pointer, 'active', flags)
         settings.bind('window-shadow', self.shadow, 'active', flags)
         settings.bind('delay', self.delay, 'value', flags)
         settings.bind('mode', self, 'mode', flags)
+
+        self.menu.props.menu_model = self.props.application. \
+            get_menu_by_id('win-menu')
 
         self.listbox.set_header_func(self.update_header)
 
@@ -145,6 +109,26 @@ class CaptureBox(Gtk.Box):
         self._toggle_flag = True
         self.props.mode = 'Selection'
 
+    def on_about(self, act, p):
+        artists = ['Tobias Bernard']
+        authors = ['Jordan Petridis', 'Zander Brown']
+        # TODO: Translatable
+        comments = 'Save images of your screen or individual windows'
+        website = 'https://gitlab.gnome.org/alatiera/Kasbah'
+        about_dialog = Gtk.AboutDialog(transient_for=self,
+                                       modal=True,
+                                       artists=artists,
+                                       authors=authors,
+                                       comments=comments,
+                                       copyright='© 2018 Jordan Petridis',
+                                       license_type=Gtk.License.AGPL_3_0,
+                                       logo_icon_name='org.gnome.Kasbah',
+                                       program_name='Kasbah',
+                                       version='0.0.1',
+                                       website=website,
+                                       website_label='Repository')
+        about_dialog.present()
+
     def update_header(self, row, before):
         if not before:
             row.set_header(None)
@@ -157,12 +141,11 @@ class CaptureBox(Gtk.Box):
             row.set_header(current)
 
     def watch(self, pid, status):
-        win = self.get_toplevel()
-        win.show()
+        self.show()
         if status is not 0:
             title = 'Screenshot failed'
             secondary = 'gnome-screenshot returned a non-zero status'
-            dlg = Gtk.MessageDialog(transient_for=win,
+            dlg = Gtk.MessageDialog(transient_for=self,
                                     modal=True,
                                     message_type=Gtk.MessageType.ERROR,
                                     buttons=Gtk.ButtonsType.CLOSE,
@@ -171,8 +154,7 @@ class CaptureBox(Gtk.Box):
             dlg.connect('response', lambda d, r: d.destroy())
             dlg.show()
 
-    def screenshot(self, act, p):
-        win = self.get_toplevel()
+    def on_screenshot(self, act, p):
         parts = [GLib.get_user_cache_dir(), 'kasbah.png']
         filename = GLib.build_filenamev(parts)
         args = []
@@ -196,15 +178,15 @@ class CaptureBox(Gtk.Box):
         args.extend(['-f', filename])
         print('Launching ' + ' '.join(args))
         try:
-            win.hide()
+            self.hide()
             flags = GLib.SpawnFlags.DO_NOT_REAP_CHILD
             (pid, sin, sout, serr) = GLib.spawn_async(args, flags=flags)
             GLib.child_watch_add(GLib.PRIORITY_DEFAULT_IDLE, pid, self.watch)
         except:
-            win.show()
+            self.show()
             title = 'Screenshot failed'
             secondary = 'Failed to launch gnome-screenshot'
-            dlg = Gtk.MessageDialog(transient_for=win,
+            dlg = Gtk.MessageDialog(transient_for=self,
                                     modal=True,
                                     message_type=Gtk.MessageType.ERROR,
                                     buttons=Gtk.ButtonsType.CLOSE,
