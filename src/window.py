@@ -88,6 +88,12 @@ class CaptureBox(Gtk.Box):
         super().__init__(**kwargs)
         self.init_template()
 
+        settings = Gio.Settings.new('org.gnome.Kasbah')
+        flags = Gio.SettingsBindFlags.DEFAULT
+        settings.bind('include-pointer', self.pointer, 'active', flags)
+        settings.bind('window-shadow', self.shadow, 'active', flags)
+        settings.bind('delay', self.delay, 'value', flags)
+
         self.listbox.set_header_func(self.update_header)
 
     def update_header(self, row, before):
