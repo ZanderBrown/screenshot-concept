@@ -22,5 +22,17 @@
         How many seconds to wait before capturing screenshot
       </description>
     </key>
+    <key name="mode" type="s">
+      <default>'Window'</default>
+      <summary>Mode</summary>
+      <choices>
+        <choice value='Screen'/>
+        <choice value='Window'/>
+        <choice value='Selection'/>
+      </choices>
+      <description>
+        The selected screenshot mode
+      </description>
+    </key>
   </schema>
 </schemalist>
