@@ -226,7 +226,7 @@
                 <property name="selection_mode">none</property>
                 <property name="activate_on_single_click">False</property>
                 <child>
-                  <object class="GtkListBoxRow">
+                  <object class="GtkListBoxRow" id="pointerrow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <child>
@@ -264,21 +264,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkListBoxRow">
-                    <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
+                  <object class="GtkListBoxRow" id="shadowrow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <child>
@@ -317,21 +303,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkListBoxRow">
-                    <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkSeparator">
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow">
+                  <object class="GtkListBoxRow" id="delayrow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <child>
