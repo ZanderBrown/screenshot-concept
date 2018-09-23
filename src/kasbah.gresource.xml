@@ -2,7 +2,6 @@
 <gresources>
   <gresource prefix="/org/gnome/Kasbah">
     <file>window.ui</file>
-    <file>capture.ui</file>
     <file>save.ui</file>
   </gresource>
   <gresource prefix="/org/gnome/Kasbah/gtk">
