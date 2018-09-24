@@ -30,6 +30,7 @@ kasbah_sources = [
   'gi_composites.py',
   'main.py',
   'save.py',
+  'service.py',
   'window.py',
 ]
 
