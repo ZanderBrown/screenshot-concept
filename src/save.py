@@ -61,7 +61,7 @@ class KasbahSave(Gtk.ApplicationWindow):
 
         now = GLib.DateTime.new_now_local()
         time = now.format("%Y-%m-%d %H-%M-%S")
-        self.filename.set_text('Screenshot from {}.png'.format(time))
+        self.filename.set_text(_('Screenshot from {}.png').format(time))
 
     def on_clipboard(self, act, p):
         Gtk.Clipboard.get_default(self.get_display()).set_image(self.pixbuf)
@@ -82,14 +82,14 @@ class KasbahSave(Gtk.ApplicationWindow):
         except GLib.Error as err:
             self.filename.props.sensitive = True
             self.folder.props.sensitive = True
-            msg = 'We where unable to save your screenshot'
+            msg = _('We where unable to save your screenshot')
             if err.matches(Gio.io_error_quark(), Gio.IOErrorEnum.EXISTS):
-                msg = '\'{}\' already exists'.format(name)
+                msg = _('{file} already exists').format(file=name)
             dlg = Gtk.MessageDialog(transient_for=self,
                                     modal=True,
                                     message_type=Gtk.MessageType.ERROR,
                                     buttons=Gtk.ButtonsType.CLOSE,
-                                    text='Saving failed',
+                                    text=_('Saving failed'),
                                     secondary_text=msg)
             dlg.connect('response', lambda d, r: d.destroy())
             dlg.show()

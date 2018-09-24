@@ -22,6 +22,7 @@ from .save import KasbahSave
 
 from pathlib import Path
 
+
 @GtkTemplate(ui='/org/gnome/Kasbah/window.ui')
 class KasbahWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'KasbahWindow'
@@ -114,8 +115,7 @@ class KasbahWindow(Gtk.ApplicationWindow):
     def on_about(self, act, p):
         artists = ['Tobias Bernard']
         authors = ['Jordan Petridis', 'Zander Brown']
-        # TODO: Translatable
-        comments = 'Save images of your screen or individual windows'
+        comments = _('Save images of your screen or individual windows')
         website = 'https://gitlab.gnome.org/alatiera/Kasbah'
         about_dialog = Gtk.AboutDialog(transient_for=self,
                                        modal=True,
@@ -128,7 +128,7 @@ class KasbahWindow(Gtk.ApplicationWindow):
                                        program_name='Kasbah',
                                        version='0.0.1',
                                        website=website,
-                                       website_label='Repository')
+                                       website_label=_('Repository'))
         about_dialog.present()
 
     def update_header(self, row, before):
@@ -145,8 +145,8 @@ class KasbahWindow(Gtk.ApplicationWindow):
     def watch(self, pid, status):
         self.show()
         if status is not 0:
-            title = 'Screenshot failed'
-            secondary = 'gnome-screenshot returned a non-zero status'
+            title = _('Screenshot failed')
+            secondary = _('gnome-screenshot returned a non-zero status')
             dlg = Gtk.MessageDialog(transient_for=self,
                                     modal=True,
                                     message_type=Gtk.MessageType.ERROR,
@@ -191,8 +191,8 @@ class KasbahWindow(Gtk.ApplicationWindow):
             GLib.child_watch_add(GLib.PRIORITY_DEFAULT_IDLE, pid, self.watch)
         except:
             self.show()
-            title = 'Screenshot failed'
-            secondary = 'Failed to launch gnome-screenshot'
+            title = _('Screenshot failed')
+            secondary = _('Failed to launch gnome-screenshot')
             dlg = Gtk.MessageDialog(transient_for=self,
                                     modal=True,
                                     message_type=Gtk.MessageType.ERROR,

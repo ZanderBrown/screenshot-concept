@@ -1,6 +1,7 @@
 [Desktop Entry]
-Name=kasbah
+Name=Kasbah
 Icon=org.gnome.Kasbah
+Comment=Save images of your screen or individual windows
 Exec=kasbah
 Terminal=false
 Type=Application

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<interface domain="gnome-kasbah">
+<interface domain="kasbah">
   <menu id="win-menu">
     <section id="app">
       <item>

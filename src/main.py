@@ -20,7 +20,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GLib
 
 from .window import KasbahWindow
 
@@ -40,4 +40,5 @@ class Application(Gtk.Application):
 def main(version):
     app = Application()
     Gtk.Window.set_default_icon_name('org.gnome.Kasbah')
+    GLib.set_application_name(_('Kasbah'))
     return app.run(sys.argv)
