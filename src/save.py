@@ -49,8 +49,8 @@ class KasbahSave(Gtk.ApplicationWindow):
             mode = GdkPixbuf.InterpType.BILINEAR
             height = self.pixbuf.props.height
             width = self.pixbuf.props.width
-            ratio = width / 250
-            thumb = self.pixbuf.scale_simple(250, height / ratio, mode)
+            ratio = width / 400
+            thumb = self.pixbuf.scale_simple(400, height / ratio, mode)
             self.preview.props.pixbuf = thumb
         except:
             print('Should do something here')
