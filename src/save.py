@@ -67,4 +67,30 @@ class KasbahSave(Gtk.ApplicationWindow):
         pass
 
     def on_save(self, act, p):
-        pass
+        self.filename.props.sensitive = False
+        self.folder.props.sensitive = False
+        parts = [GLib.get_user_cache_dir(), 'kasbah.png']
+        filename = GLib.build_filenamev(parts)
+        source = Gio.File.new_for_path(filename)
+        folder = self.folder.get_filename()
+        name = self.filename.get_text()
+        path = GLib.build_filenamev([folder, name])
+        dest = Gio.File.new_for_path(path)
+        try:
+            source.move(dest, Gio.FileCopyFlags.NONE)
+            self.destroy()
+        except GLib.Error as err:
+            self.filename.props.sensitive = True
+            self.folder.props.sensitive = True
+            msg = 'We where unable to save your screenshot'
+            if err.matches(Gio.io_error_quark(), Gio.IOErrorEnum.EXISTS):
+                msg = '\'{}\' already exists'.format(name)
+            dlg = Gtk.MessageDialog(transient_for=self,
+                                    modal=True,
+                                    message_type=Gtk.MessageType.ERROR,
+                                    buttons=Gtk.ButtonsType.CLOSE,
+                                    text='Saving failed',
+                                    secondary_text=msg)
+            dlg.connect('response', lambda d, r: d.destroy())
+            dlg.show()
+
