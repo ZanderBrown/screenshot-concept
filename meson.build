@@ -4,6 +4,10 @@ project('kasbah',         version: '0.1.0',
 
 i18n = import('i18n')
 
+bindir = join_paths([ get_option('prefix'), 'bin' ])
+
+conf = configuration_data()
+conf.set('BINDIR', bindir)
 
 subdir('data')
 subdir('src')

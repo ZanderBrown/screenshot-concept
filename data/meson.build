@@ -29,6 +29,11 @@ if appstream_util.found()
   )
 endif
 
+configure_file(input: 'org.gnome.Kasbah.service.in',
+               output: 'org.gnome.Kasbah.service',
+               configuration: conf,
+               install_dir: join_paths([get_option('datadir'),'dbus-1/services']))
+
 install_data('org.gnome.Kasbah.svg',
              install_dir: join_paths([get_option('datadir'),'icons/hicolor/scalable/apps']))
 
