@@ -45,6 +45,9 @@ class KasbahWindow(Gtk.ApplicationWindow):
 
     # Options list
     listbox = GtkTemplate.Child()
+    pointerrow = GtkTemplate.Child()
+    shadowrow = GtkTemplate.Child()
+    delayrow = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
