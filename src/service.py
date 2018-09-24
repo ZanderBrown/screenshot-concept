@@ -32,7 +32,7 @@ class ShellService(GObject.GObject):
         self.conn = Gio.bus_get_finish(res)
         self.emit('ready')
 
-    def flash(self, x, y, width, height, cb=None):
+    def flash(self, x, y, width, height, cb=None, data=None):
         self.conn.call(self.BUS_NAME,
                        self.OBJECT_PATH,
                        self.IFACE_NAME,
@@ -43,17 +43,18 @@ class ShellService(GObject.GObject):
                        -1,
                        None,
                        self._flash_done,
-                       cb)
+                       (cb, data))
 
     def _flash_done(self, src, res, cb):
         try:
             src.call_finish(res)
-            if cb:
-                cb()
+            func, data = cb
+            if func:
+                func(data)
         except GLib.Error as err:
             self._handle_err(err)
 
-    def select(self, cb):
+    def select(self, cb, data=None):
         self.conn.call(self.BUS_NAME,
                        self.OBJECT_PATH,
                        self.IFACE_NAME,
@@ -64,17 +65,19 @@ class ShellService(GObject.GObject):
                        -1,
                        None,
                        self._select_done,
-                       cb)
+                       (cb, data))
 
     def _select_done(self, src, res, cb):
         try:
             x, y, w, h = src.call_finish(res).unpack()
-            if cb:
-                cb(x, y, w, h)
+            func, data = cb
+            if func:
+                func(x, y, w, h, data)
         except GLib.Error as err:
             self._handle_err(err)
 
-    def screenshot(self, filename, cursor=False, flash=True, cb=None):
+    def screenshot(self, filename, cursor=False, flash=True,
+                   cb=None, data=None):
         self.conn.call(self.BUS_NAME,
                        self.OBJECT_PATH,
                        self.IFACE_NAME,
@@ -85,9 +88,10 @@ class ShellService(GObject.GObject):
                        -1,
                        None,
                        self._screenshot_done,
-                       cb)
+                       (cb, data))
 
-    def area(self, filename, x, y, width, height, flash=True, cb=None):
+    def area(self, filename, x, y, width, height, flash=True,
+             cb=None, data=None):
         self.conn.call(self.BUS_NAME,
                        self.OBJECT_PATH,
                        self.IFACE_NAME,
@@ -99,9 +103,10 @@ class ShellService(GObject.GObject):
                        -1,
                        None,
                        self._screenshot_done,
-                       cb)
+                       (cb, data))
 
-    def window(self, filename, frame=True, cursor=False, flash=True, cb=None):
+    def window(self, filename, frame=True, cursor=False, flash=True,
+               cb=None, data=None):
         self.conn.call(self.BUS_NAME,
                        self.OBJECT_PATH,
                        self.IFACE_NAME,
@@ -113,13 +118,14 @@ class ShellService(GObject.GObject):
                        -1,
                        None,
                        self._screenshot_done,
-                       cb)
+                       (cb, data))
 
     def _screenshot_done(self, src, res, cb):
         try:
             success, filename = src.call_finish(res).unpack()
-            if cb:
-                cb(success, filename)
+            func, data = cb
+            if func:
+                func(success, filename, data)
         except GLib.Error as err:
             self._handle_err(err)
 

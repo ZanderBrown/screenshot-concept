@@ -141,8 +141,7 @@ class KasbahWindow(Gtk.ApplicationWindow):
         about_dialog.present()
 
     def service_error(self, src, code):
-        print('Errors')
-        print(code)
+        self.show()
         err = ServiceError(code)
         if err is ServiceError.UNAVAILABLE:
             dlg = self.show_error(_('Screenshot service unavailable'),
@@ -165,19 +164,6 @@ class KasbahWindow(Gtk.ApplicationWindow):
             current.show()
             row.set_header(current)
 
-    def watch(self, pid, status):
-        self.show()
-        if status is not 0:
-            title = _('Screenshot failed')
-            secondary = _('gnome-screenshot returned a non-zero status')
-            dlg = self.show_error(title, secondary)
-            dlg.show()
-        else:
-            save = KasbahSave(transient_for=self,
-                              modal=True,
-                              application=self.props.application)
-            save.show()
-
     def show_error(self, text, secondary):
         dlg = Gtk.MessageDialog(transient_for=self,
                                 modal=True,
@@ -191,37 +177,44 @@ class KasbahWindow(Gtk.ApplicationWindow):
     def on_screenshot(self, act, p):
         parts = [GLib.get_user_cache_dir(), 'kasbah.png']
         filename = GLib.build_filenamev(parts)
-        args = []
-        if Path('/.flatpak-info').exists():
-            prog = GLib.find_program_in_path('flatpak-spawn')
-            args.extend([prog, '--host', 'gnome-screenshot'])
+        self.hide()
+        if self.mode == 'Selection':
+            self.service.select(self._on_select, filename)
         else:
-            prog = GLib.find_program_in_path('gnome-screenshot')
-            args.append(prog)
-        if self.mode == 'Window':
-            args.append('-w')
-            if self.shadow.props.active:
-                args.extend(['-e', 'shadow'])
-        elif self.mode == 'Selection':
-            self.service.select(lambda x, y, w, h: None)
-            return
-            args.append('-a')
-        if not self.mode == 'Selection':
-            if self.pointer.props.active:
-                args.append('-p')
             if self.delay.props.value > 0:
-                args.extend(['-d', str(int(self.delay.props.value))])
-        args.extend(['-f', filename])
-        print('Launching ' + ' '.join(args))
-        try:
-            self.hide()
-            flags = GLib.SpawnFlags.DO_NOT_REAP_CHILD
-            (pid, sin, sout, serr) = GLib.spawn_async(args, flags=flags)
-            GLib.child_watch_add(GLib.PRIORITY_DEFAULT_IDLE, pid, self.watch)
-        except:
-            self.show()
+                GLib.timeout_add_seconds(int(self.delay.props.value),
+                                         self._on_screenshot,
+                                         filename)
+            else:
+                # Give the window a chance to recive focus
+                GLib.timeout_add(600, self._on_screenshot, filename)
+
+    def _on_screenshot(self, filename):
+        if self.mode == 'Window':
+            # TODO: Shadow support (when self.shadow.props.active)
+            self.service.window(filename,
+                                cursor=self.pointer.props.active,
+                                cb=self.save)
+        else:
+            self.service.screenshot(filename,
+                                    cursor=self.pointer.props.active,
+                                    cb=self.save)
+
+    def _on_select(self, x, y, w, h, filename):
+        self.service.area(filename, x, y, w, h, cb=self.save)
+
+    def save(self, success, filename, data=None):
+        self.show()
+        if success:
+            save = KasbahSave(filename,
+                              transient_for=self,
+                              modal=True,
+                              application=self.props.application)
+            save.show()
+        else:
             title = _('Screenshot failed')
-            secondary = _('Failed to launch gnome-screenshot')
+            secondary = _('The screenshot service reported an error')
             dlg = self.show_error(title, secondary)
             dlg.show()
+        return GLib.SOURCE_REMOVE
 

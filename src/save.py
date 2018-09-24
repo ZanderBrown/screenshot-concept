@@ -26,9 +26,12 @@ class KasbahSave(Gtk.ApplicationWindow):
     filename = GtkTemplate.Child()
     folder = GtkTemplate.Child()
 
-    def __init__(self, **kwargs):
+    def __init__(self, filename, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
+
+        print(filename)
+        self.tmpfile = filename
 
         action = Gio.SimpleAction.new("cancel", None)
         action.connect("activate", lambda a, p: self.destroy())
@@ -43,9 +46,7 @@ class KasbahSave(Gtk.ApplicationWindow):
         self.add_action(action)
 
         try:
-            parts = [GLib.get_user_cache_dir(), 'kasbah.png']
-            tmpfile = GLib.build_filenamev(parts)
-            self.pixbuf = GdkPixbuf.Pixbuf.new_from_file(tmpfile)
+            self.pixbuf = GdkPixbuf.Pixbuf.new_from_file(self.tmpfile)
             mode = GdkPixbuf.InterpType.BILINEAR
             height = self.pixbuf.props.height
             width = self.pixbuf.props.width
@@ -69,9 +70,7 @@ class KasbahSave(Gtk.ApplicationWindow):
     def on_save(self, act, p):
         self.filename.props.sensitive = False
         self.folder.props.sensitive = False
-        parts = [GLib.get_user_cache_dir(), 'kasbah.png']
-        filename = GLib.build_filenamev(parts)
-        source = Gio.File.new_for_path(filename)
+        source = Gio.File.new_for_path(self.tmpfile)
         folder = self.folder.get_filename()
         name = self.filename.get_text()
         path = GLib.build_filenamev([folder, name])
