@@ -67,7 +67,7 @@
             <property name="margin_left">16</property>
             <property name="margin_right">16</property>
             <property name="margin_top">16</property>
-            <property name="margin_bottom">60</property>
+            <property name="margin_bottom">16</property>
             <property name="pixel_size">200</property>
             <property name="icon_name">image-x-generic-symbolic</property>
           </object>
@@ -83,11 +83,12 @@
             <property name="can_focus">False</property>
             <property name="halign">center</property>
             <property name="row_spacing">6</property>
-            <property name="column_spacing">6</property>
+            <property name="column_spacing">10</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes">Name</property>
               </object>
               <packing>
@@ -99,6 +100,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes">Folder</property>
               </object>
               <packing>
@@ -110,6 +112,7 @@
               <object class="GtkEntry" id="filename">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="width_chars">35</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -138,4 +141,10 @@
       </object>
     </child>
   </template>
+  <object class="GtkSizeGroup">
+    <widgets>
+      <widget name="filename"/>
+      <widget name="folder"/>
+    </widgets>
+  </object>
 </interface>
