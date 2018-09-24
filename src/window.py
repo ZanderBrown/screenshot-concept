@@ -19,6 +19,7 @@ from gi.repository import Gtk, Gio, GObject, GLib
 from .gi_composites import GtkTemplate
 
 from .save import KasbahSave
+from .service import ShellService, ServiceError
 
 from pathlib import Path
 
@@ -59,7 +60,12 @@ class KasbahWindow(Gtk.ApplicationWindow):
 
         action = Gio.SimpleAction.new("screenshot", None)
         action.connect("activate", self.on_screenshot)
+        action.set_enabled(False)
         self.add_action(action)
+
+        self.service = ShellService()
+        self.service.connect('ready', lambda o: action.set_enabled(True))
+        self.service.connect('error', self.service_error)
 
         settings = Gio.Settings.new('org.gnome.Kasbah')
         flags = Gio.SettingsBindFlags.DEFAULT
@@ -134,6 +140,20 @@ class KasbahWindow(Gtk.ApplicationWindow):
                                        website_label=_('Repository'))
         about_dialog.present()
 
+    def service_error(self, src, code):
+        print('Errors')
+        print(code)
+        err = ServiceError(code)
+        if err is ServiceError.UNAVAILABLE:
+            dlg = self.show_error(_('Screenshot service unavailable'),
+                                  _('The GNOME Shell Screenshot service is '
+                                    'required to take a screenshot'))
+            dlg.show()
+        elif err is ServiceError.UNKNOWN:
+            dlg = self.show_error(_('Screenshot failed'),
+                                  _('An unknown error occured'))
+            dlg.show()
+
     def update_header(self, row, before):
         if not before:
             row.set_header(None)
@@ -150,19 +170,23 @@ class KasbahWindow(Gtk.ApplicationWindow):
         if status is not 0:
             title = _('Screenshot failed')
             secondary = _('gnome-screenshot returned a non-zero status')
-            dlg = Gtk.MessageDialog(transient_for=self,
-                                    modal=True,
-                                    message_type=Gtk.MessageType.ERROR,
-                                    buttons=Gtk.ButtonsType.CLOSE,
-                                    text=title,
-                                    secondary_text=secondary)
-            dlg.connect('response', lambda d, r: d.destroy())
+            dlg = self.show_error(title, secondary)
             dlg.show()
         else:
             save = KasbahSave(transient_for=self,
                               modal=True,
                               application=self.props.application)
             save.show()
+
+    def show_error(self, text, secondary):
+        dlg = Gtk.MessageDialog(transient_for=self,
+                                modal=True,
+                                message_type=Gtk.MessageType.ERROR,
+                                buttons=Gtk.ButtonsType.CLOSE,
+                                text=text,
+                                secondary_text=secondary)
+        dlg.connect('response', lambda d, r: d.destroy())
+        return dlg
 
     def on_screenshot(self, act, p):
         parts = [GLib.get_user_cache_dir(), 'kasbah.png']
@@ -179,6 +203,8 @@ class KasbahWindow(Gtk.ApplicationWindow):
             if self.shadow.props.active:
                 args.extend(['-e', 'shadow'])
         elif self.mode == 'Selection':
+            self.service.select(lambda x, y, w, h: None)
+            return
             args.append('-a')
         if not self.mode == 'Selection':
             if self.pointer.props.active:
@@ -196,12 +222,6 @@ class KasbahWindow(Gtk.ApplicationWindow):
             self.show()
             title = _('Screenshot failed')
             secondary = _('Failed to launch gnome-screenshot')
-            dlg = Gtk.MessageDialog(transient_for=self,
-                                    modal=True,
-                                    message_type=Gtk.MessageType.ERROR,
-                                    buttons=Gtk.ButtonsType.CLOSE,
-                                    text=title,
-                                    secondary_text=secondary)
-            dlg.connect('response', lambda d, r: d.destroy())
+            dlg = self.show_error(title, secondary)
             dlg.show()
 
