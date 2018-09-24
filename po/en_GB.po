@@ -1,0 +1,112 @@
+# English translations for kasbah package.
+# Copyright (C) 2018 THE kasbah'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the kasbah package.
+# Automatically generated, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kasbah\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-24 17:54+0100\n"
+"PO-Revision-Date: 2018-09-24 14:51+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/org.gnome.Kasbah.desktop.in:3 data/org.gnome.Kasbah.appdata.xml.in:6
+#: src/main.py:43
+msgid "Kasbah"
+msgstr "Kasbah"
+
+#: data/org.gnome.Kasbah.desktop.in:4
+msgid "org.gnome.Kasbah"
+msgstr "org.gnome.Kasbah"
+
+#: data/org.gnome.Kasbah.desktop.in:5 data/org.gnome.Kasbah.appdata.xml.in:7
+#: src/window.py:120
+msgid "Save images of your screen or individual windows"
+msgstr "Save images of your screen or individual windows"
+
+#: data/org.gnome.Kasbah.gschema.xml:6
+msgid "Include pointer"
+msgstr "Include pointer"
+
+#: data/org.gnome.Kasbah.gschema.xml:7
+msgid "Whether the pointer should be included in the screenshot"
+msgstr "Whether the pointer should be included in the screenshot"
+
+#: data/org.gnome.Kasbah.gschema.xml:13 src/window.ui:282
+msgid "Window shadow"
+msgstr "Window shadow"
+
+#: data/org.gnome.Kasbah.gschema.xml:14
+msgid "Whether screenshot should include window shadow"
+msgstr "Whether screenshot should include window shadow"
+
+#: data/org.gnome.Kasbah.gschema.xml:20
+msgid "Delay"
+msgstr "Delay"
+
+#: data/org.gnome.Kasbah.gschema.xml:21
+msgid "How many seconds to wait before capturing screenshot"
+msgstr "How many seconds to wait before capturing screenshot"
+
+#: data/org.gnome.Kasbah.gschema.xml:27
+msgid "Mode"
+msgstr "Mode"
+
+#: data/org.gnome.Kasbah.gschema.xml:33
+msgid "The selected screenshot mode"
+msgstr "The selected screenshot mode"
+
+#: src/window.ui:25
+msgid "Capture Area"
+msgstr "Capture Area"
+
+#: src/window.ui:74
+msgid "Screen"
+msgstr "Screen"
+
+#: src/window.ui:126
+msgid "Window"
+msgstr "Window"
+
+#: src/window.ui:177
+msgid "Selection"
+msgstr "Selection"
+
+#: src/window.ui:244
+msgid "Show pointer"
+msgstr "Show pointer"
+
+#: src/window.ui:323
+msgid "Delay in seconds"
+msgstr "Delay in seconds"
+
+#: src/window.ui:335
+msgid "0"
+msgstr "0"
+
+#: src/window.ui:377
+msgid "Take Screenshot"
+msgstr "Take Screenshot"
+
+#: src/window.py:133
+msgid "Repository"
+msgstr "Repository"
+
+#: src/window.py:150 src/window.py:196
+msgid "Screenshot failed"
+msgstr "Screenshot failed"
+
+#: src/window.py:151
+msgid "gnome-screenshot returned a non-zero status"
+msgstr "gnome-screenshot returned a non-zero status"
+
+#: src/window.py:197
+msgid "Failed to launch gnome-screenshot"
+msgstr "Failed to launch gnome-screenshot"
