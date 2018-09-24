@@ -45,13 +45,13 @@ class KasbahSave(Gtk.ApplicationWindow):
         try:
             parts = [GLib.get_user_cache_dir(), 'kasbah.png']
             tmpfile = GLib.build_filenamev(parts)
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file(tmpfile)
+            self.pixbuf = GdkPixbuf.Pixbuf.new_from_file(tmpfile)
             mode = GdkPixbuf.InterpType.BILINEAR
-            height = pixbuf.props.height
-            width = pixbuf.props.width
+            height = self.pixbuf.props.height
+            width = self.pixbuf.props.width
             ratio = width / 250
-            pixbuf = pixbuf.scale_simple(250, height / ratio, mode)
-            self.preview.props.pixbuf = pixbuf
+            thumb = self.pixbuf.scale_simple(250, height / ratio, mode)
+            self.preview.props.pixbuf = thumb
         except:
             print('Should do something here')
 
@@ -64,7 +64,7 @@ class KasbahSave(Gtk.ApplicationWindow):
         self.filename.set_text('Screenshot from {}.png'.format(time))
 
     def on_clipboard(self, act, p):
-        pass
+        Gtk.Clipboard.get_default(self.get_display()).set_image(self.pixbuf)
 
     def on_save(self, act, p):
         self.filename.props.sensitive = False
