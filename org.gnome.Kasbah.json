@@ -59,7 +59,7 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "file:///home/alatiera/Projects/kasbah"
+                    "url": "https://gitlab.gnome.org/alatiera/Kasbah.git"
                 }
             ]
         }
