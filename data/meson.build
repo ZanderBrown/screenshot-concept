@@ -47,3 +47,13 @@ if compile_schemas.found()
     args: ['--strict', '--dry-run', meson.current_source_dir()]
   )
 endif
+
+gnome = import('gnome')
+pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
+
+gnome.compile_resources('kasbah',
+  'kasbah.gresource.xml',
+  gresource_bundle: true,
+  install: true,
+  install_dir: pkgdatadir,
+)
