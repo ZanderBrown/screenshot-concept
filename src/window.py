@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Gio, GObject, GLib
+from gi.repository import Gtk, Gio, GObject, GLib, GdkPixbuf
 from .gi_composites import GtkTemplate
 
 from .save import KasbahSave
@@ -36,6 +36,11 @@ class KasbahWindow(Gtk.ApplicationWindow):
     screen = GtkTemplate.Child()
     window = GtkTemplate.Child()
     selection = GtkTemplate.Child()
+
+    # Button Images
+    screen_img = GtkTemplate.Child()
+    window_img = GtkTemplate.Child()
+    selection_img = GtkTemplate.Child()
 
     # The usefull switches from the widget
     # We will need to map actions to them later
@@ -69,6 +74,7 @@ class KasbahWindow(Gtk.ApplicationWindow):
             get_menu_by_id('win-menu')
 
         self.listbox.set_header_func(self.update_header)
+        self._fix_icons()
 
     @GObject.Property(type=str, nick='Screenshot mode')
     def mode(self):
@@ -202,3 +208,25 @@ class KasbahWindow(Gtk.ApplicationWindow):
             dlg.connect('response', lambda d, r: d.destroy())
             dlg.show()
 
+    # We want to set the icons from Gresource,
+    # and I can't find a way to set their size in with Glade
+    # so we do it manually here.
+    def _fix_icons(self):
+        path = '/org/gnome/Kasbah/'
+        size = 64
+
+        d = GdkPixbuf.Pixbuf.new_from_resource_at_scale(path + 'display-symbolic.svg',
+                                                        size,
+                                                        size,
+                                                        True)
+        w = GdkPixbuf.Pixbuf.new_from_resource_at_scale(path + 'window-symbolic.svg',
+                                                        size,
+                                                        size,
+                                                        True)
+        s = GdkPixbuf.Pixbuf.new_from_resource_at_scale(path + 'selection-symbolic.svg',
+                                                        size,
+                                                        size,
+                                                        True)
+        self.screen_img.set_from_pixbuf(d)
+        self.window_img.set_from_pixbuf(w)
+        self.selection_img.set_from_pixbuf(s)

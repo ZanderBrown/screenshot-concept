@@ -3,6 +3,9 @@
   <gresource prefix="/org/gnome/Kasbah">
     <file>window.ui</file>
     <file>save.ui</file>
+    <file>display-symbolic.svg</file>
+    <file>selection-symbolic.svg</file>
+    <file>window-symbolic.svg</file>
   </gresource>
   <gresource prefix="/org/gnome/Kasbah/gtk">
     <file>menus.ui</file>
