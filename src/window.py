@@ -213,7 +213,7 @@ class KasbahWindow(Gtk.ApplicationWindow):
     # so we do it manually here.
     def _fix_icons(self):
         path = '/org/gnome/Kasbah/'
-        size = 48
+        size = 32
 
         d = GdkPixbuf.Pixbuf.new_from_resource_at_scale(path + 'display-symbolic.svg',
                                                         size,
