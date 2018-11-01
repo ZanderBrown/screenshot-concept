@@ -191,8 +191,8 @@ class KasbahWindow(Gtk.ApplicationWindow):
 
     def _on_screenshot(self, filename):
         if self.mode == 'Window':
-            # TODO: Shadow support (when self.shadow.props.active)
             self.service.window(filename,
+                                frame=self.shadow.props.active,
                                 cursor=self.pointer.props.active,
                                 cb=self.save)
         else:
